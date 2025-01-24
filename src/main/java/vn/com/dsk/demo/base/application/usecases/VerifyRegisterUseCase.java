@@ -27,19 +27,24 @@ public class VerifyRegisterUseCase implements UseCase<Object, VerifyRegisterInfo
 
     private final AuthService authService;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
-    public VerifyRegisterUseCase(AuthService authService, RedisService redisService, EmailService emailService) {
+    public VerifyRegisterUseCase(AuthService authService, RedisService redisService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.authService = authService;
         this.redisService = redisService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
     public Object execute(VerifyRegisterInfo verifyRegisterInfo) {
         RegisterInfo registerInfo = redisService.getRegisterInfoByToken(verifyRegisterInfo.getVerifyCode() + verifyRegisterInfo.getUsername());
-        if (!Objects.isNull(registerInfo) && compareInfo(registerInfo, verifyRegisterInfo)) {
+        if (authService.checkEmailOrUserNameExistInSystem(registerInfo)) {
+            throw new ServiceException("Email or username is existed in system!", "err.api.email-username-is-existed");
+        }
+        if (compareInfo(registerInfo, verifyRegisterInfo)) {
             try {
                 Account account = new Account();
                 account.setUsername(registerInfo.getUsername());
@@ -50,6 +55,7 @@ public class VerifyRegisterUseCase implements UseCase<Object, VerifyRegisterInfo
                 if (listAuthority != null && !listAuthority.isEmpty()) {
                     account.setAuthorities(authService.getPermissionByName(listAuthority));
                 }
+
                 authService.registerNewAccount(account);
                 return new JwtResponse(
                         jwtUtils.generateAccessToken(registerInfo.getUsername()),
