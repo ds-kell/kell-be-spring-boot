@@ -3,9 +3,11 @@ package vn.com.dsk.demo.base.adapter.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.com.dsk.demo.base.adapter.dto.request.*;
+import vn.com.dsk.demo.base.adapter.dto.response.JwtResponse;
 import vn.com.dsk.demo.base.application.services.AuthService;
 import vn.com.dsk.demo.base.adapter.wrappers.Response;
 import vn.com.dsk.demo.base.adapter.wrappers.ResponseUtils;
@@ -31,8 +33,16 @@ public class AuthController {
     private final LoginUseCase loginUseCase ;
 
     @PostMapping("public/auth/login")
-    public ResponseEntity<Response> authenticateAccount(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseUtils.ok(loginUseCase.execute(loginRequest));
+    public ResponseEntity<Response> login(@Valid @RequestBody LoginRequest loginRequest) {
+        JwtResponse response = loginUseCase.execute(loginRequest);
+        ResponseCookie cookie = ResponseCookie.from("accessToken", response.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+        return ResponseUtils.ok(cookie, response);
     }
 
     @PostMapping("public/auth/pre-register")
@@ -58,6 +68,16 @@ public class AuthController {
     @PostMapping("private/auth/change-password")
     public ResponseEntity<Response> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         return ResponseUtils.ok(authService.changePassword(changePasswordRequest));
+    }
+    @PostMapping("private/auth/logout")
+    public ResponseEntity<Response> logout(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        ResponseCookie cookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseUtils.ok(cookie, "Logged out successfully");
     }
 
     @PostMapping("public/auth/forgot-password")

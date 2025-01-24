@@ -28,6 +28,12 @@ public class ResponseUtils {
         return ResponseEntity.ok(Response.of(HttpStatusCode.CREATED, msg, data));
     }
 
+    public ResponseEntity<Response> ok(Object header,  Object body) {
+        return ResponseEntity.ok()
+                .header("Set-cookie", header.toString())
+                .body(Response.of(HttpStatusCode.OK, "Success", body));
+    }
+
     public ResponseEntity<Response> ok(HttpStatusCode statusCode, String msg, Object data) {
         return ResponseEntity.ok(Response.of(statusCode, msg, data));
     }
