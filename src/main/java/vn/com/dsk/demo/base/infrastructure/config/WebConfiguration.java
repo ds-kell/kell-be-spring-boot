@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfiguration implements WebMvcConfigurer {
 
+    private static final String[] WHITE_LIST_URL = {"http://localhost:3000", "http://localhost:8080"};
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("", "/swagger-ui/index.html");
@@ -17,9 +19,9 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("*")
+                .allowedOrigins(WHITE_LIST_URL)
                 .allowedMethods("*")
-                .allowedOriginPatterns("http://localhost:8080/")
+//                .allowedOriginPatterns("http://*.example.com", "https://*.example.org")
                 .allowCredentials(true);
 
     }
