@@ -129,6 +129,17 @@ public class AuthService {
         }
     }
 
+    public JwtResponse verifyCookieExpiration(String refreshToken) {
+        if (StringUtils.hasText(refreshToken) && Boolean.TRUE.equals(jwtUtils.validateToken(refreshToken))) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtils.extractUsername(refreshToken));
+            List<String> authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+            return new JwtResponse(jwtUtils.generateAccessToken(userDetails), jwtUtils.generateRefreshToken(userDetails), "Bearer", userDetails.getUsername(),
+                    authorities);
+        } else {
+            throw new ServiceException("Login session has expired", "err.token.expired");
+        }
+    }
+
     public String forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         Optional<Account> account = accountJpaRepository.findByEmail(forgotPasswordRequest.getEmail());
         if (account.isPresent()) {
@@ -143,4 +154,14 @@ public class AuthService {
     public JwtResponse changePassword(ChangePasswordRequest changePasswordRequest) {
         return null;
     }
+
+//    public JwtResponse refreshToken(){
+//        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Optional<Account> account = accountJpaRepository.findByUsername(username);
+//        if(account.isPresent()){
+//
+//        } else{
+//            return null;
+//        }
+//    }
 }

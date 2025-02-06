@@ -1,4 +1,4 @@
-package vn.com.dsk.demo.base.application.usecases;
+package vn.com.dsk.demo.base.shared.common;
 
 @FunctionalInterface
 public interface UseCase<RESULT, PARAMS> {

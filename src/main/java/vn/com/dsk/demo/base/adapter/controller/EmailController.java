@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.dsk.demo.base.domain.entities.EmailDetails;
 import vn.com.dsk.demo.base.application.services.EmailService;
-import vn.com.dsk.demo.base.adapter.wrappers.Response;
-import vn.com.dsk.demo.base.adapter.wrappers.ResponseUtils;
+import vn.com.dsk.demo.base.shared.wrappers.Response;
+import vn.com.dsk.demo.base.shared.wrappers.ResponseUtils;
 
 @RequiredArgsConstructor
 @RestController

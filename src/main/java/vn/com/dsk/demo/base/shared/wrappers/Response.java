@@ -1,4 +1,4 @@
-package vn.com.dsk.demo.base.adapter.wrappers;
+package vn.com.dsk.demo.base.shared.wrappers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,17 +11,19 @@ import vn.com.dsk.demo.base.shared.constants.HttpStatusCode;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErrorResponse {
-
+public class Response {
     @Builder.Default
-    protected HttpStatusCode statusCode = null;
+    protected HttpStatusCode status = null;
 
     protected String message = null;
 
-    public static ErrorResponse of (HttpStatusCode statusCode, String message) {
-        return ErrorResponse.builder()
-                .statusCode(statusCode)
+    protected Object data = null;
+
+    public static Response of (HttpStatusCode statusCode, String message, Object data) {
+        return Response.builder()
+                .status(statusCode)
                 .message(message)
+                .data(data)
                 .build();
     }
 

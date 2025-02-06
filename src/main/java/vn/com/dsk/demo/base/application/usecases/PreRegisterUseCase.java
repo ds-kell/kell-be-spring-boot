@@ -7,6 +7,7 @@ import vn.com.dsk.demo.base.application.services.AuthService;
 import vn.com.dsk.demo.base.application.services.EmailService;
 import vn.com.dsk.demo.base.application.services.RedisService;
 import vn.com.dsk.demo.base.infrastructure.exception.ServiceException;
+import vn.com.dsk.demo.base.shared.common.UseCase;
 
 import java.security.SecureRandom;
 

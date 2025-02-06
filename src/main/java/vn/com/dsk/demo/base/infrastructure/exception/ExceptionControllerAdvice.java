@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import vn.com.dsk.demo.base.adapter.wrappers.ErrorResponse;
-import vn.com.dsk.demo.base.adapter.wrappers.ResponseUtils;
+import vn.com.dsk.demo.base.shared.wrappers.ErrorResponse;
+import vn.com.dsk.demo.base.shared.wrappers.ResponseUtils;
 import vn.com.dsk.demo.base.shared.constants.HttpStatusCode;
 
 import java.io.FileNotFoundException;

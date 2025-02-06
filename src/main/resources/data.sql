@@ -1,5 +1,5 @@
-INSERT INTO tbl_authority (name) VALUES ('ADMIN');
-INSERT INTO tbl_authority (name) VALUES ('MANAGER');
-INSERT INTO tbl_authority (name) VALUES ('STAFF');
-INSERT INTO tbl_authority (name) VALUES ('CUSTOMER');
-INSERT INTO tbl_authority (name) VALUES ('NONE');
+--INSERT INTO tbl_authority (name) VALUES ('ADMIN');
+--INSERT INTO tbl_authority (name) VALUES ('MANAGER');
+--INSERT INTO tbl_authority (name) VALUES ('STAFF');
+--INSERT INTO tbl_authority (name) VALUES ('CUSTOMER');
+--INSERT INTO tbl_authority (name) VALUES ('NONE');

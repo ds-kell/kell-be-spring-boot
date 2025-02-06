@@ -1,9 +1,11 @@
-package vn.com.dsk.demo.base.adapter.wrappers;
+package vn.com.dsk.demo.base.shared.wrappers;
 
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import vn.com.dsk.demo.base.adapter.dto.response.JwtResponse;
 import vn.com.dsk.demo.base.shared.constants.HttpStatusCode;
 
 @UtilityClass
@@ -28,10 +30,35 @@ public class ResponseUtils {
         return ResponseEntity.ok(Response.of(HttpStatusCode.CREATED, msg, data));
     }
 
-    public ResponseEntity<Response> ok(Object header,  Object body) {
+    public ResponseEntity<Response> okCookie(JwtResponse response, Object data) {
+        return okCookie(response, "success", data);
+    }
+
+    public ResponseEntity<Response> okCookie(JwtResponse response, String msg) {
+        return okCookie(response, msg, null);
+    }
+
+    public ResponseEntity<Response> okCookie(JwtResponse response, String msg, Object data) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", response.getAccessToken())
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("None")
+                .build();
+
         return ResponseEntity.ok()
-                .header("Set-cookie", header.toString())
-                .body(Response.of(HttpStatusCode.OK, "Success", body));
+                .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(Response.of(HttpStatusCode.OK, msg, data));
     }
 
     public ResponseEntity<Response> ok(HttpStatusCode statusCode, String msg, Object data) {

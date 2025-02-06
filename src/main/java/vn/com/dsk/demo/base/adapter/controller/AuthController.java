@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import vn.com.dsk.demo.base.adapter.dto.request.*;
 import vn.com.dsk.demo.base.adapter.dto.response.JwtResponse;
 import vn.com.dsk.demo.base.application.services.AuthService;
-import vn.com.dsk.demo.base.adapter.wrappers.Response;
-import vn.com.dsk.demo.base.adapter.wrappers.ResponseUtils;
+import vn.com.dsk.demo.base.application.usecases.RefreshTokenUseCase;
+import vn.com.dsk.demo.base.shared.wrappers.Response;
+import vn.com.dsk.demo.base.shared.wrappers.ResponseUtils;
 import vn.com.dsk.demo.base.application.usecases.LoginUseCase;
 import vn.com.dsk.demo.base.application.usecases.PreRegisterUseCase;
 import vn.com.dsk.demo.base.application.usecases.VerifyRegisterUseCase;
@@ -32,17 +33,12 @@ public class AuthController {
 
     private final LoginUseCase loginUseCase ;
 
+    private final RefreshTokenUseCase refreshTokenUseCase;
+
     @PostMapping("public/auth/login")
     public ResponseEntity<Response> login(@Valid @RequestBody LoginRequest loginRequest) {
         JwtResponse response = loginUseCase.execute(loginRequest);
-        ResponseCookie cookie = ResponseCookie.from("accessToken", response.getAccessToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(7 * 24 * 60 * 60)
-                .sameSite("Strict")
-                .build();
-        return ResponseUtils.ok(cookie, response);
+        return ResponseUtils.okCookie(response, response);
     }
 
     @PostMapping("public/auth/pre-register")
@@ -60,9 +56,15 @@ public class AuthController {
         return ResponseUtils.ok(authService.verifyRegister(OTP));
     }
 
+//    @GetMapping("private/auth/refresh-token")
+//    public ResponseEntity<Response> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
+//        return ResponseUtils.ok("verified", authService.verifyExpiration(refreshToken));
+//    }
+
     @GetMapping("private/auth/refresh-token")
-    public ResponseEntity<Response> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
-        return ResponseUtils.ok("verified", authService.verifyExpiration(refreshToken));
+    public ResponseEntity<Response> refreshToken(@CookieValue("refreshToken") String refreshToken) {
+        JwtResponse response = refreshTokenUseCase.execute(refreshToken);
+        return ResponseUtils.okCookie(response,"verified", response);
     }
 
     @PostMapping("private/auth/change-password")
@@ -70,14 +72,8 @@ public class AuthController {
         return ResponseUtils.ok(authService.changePassword(changePasswordRequest));
     }
     @PostMapping("private/auth/logout")
-    public ResponseEntity<Response> logout(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        ResponseCookie cookie = ResponseCookie.from("accessToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(0)
-                .build();
-        return ResponseUtils.ok(cookie, "Logged out successfully");
+    public ResponseEntity<Response> logout() {
+        return ResponseUtils.okCookie(new JwtResponse(), "Logged out successfully");
     }
 
     @PostMapping("public/auth/forgot-password")

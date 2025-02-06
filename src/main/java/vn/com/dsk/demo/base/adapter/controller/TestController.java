@@ -3,8 +3,8 @@ package vn.com.dsk.demo.base.adapter.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.com.dsk.demo.base.adapter.wrappers.Response;
-import vn.com.dsk.demo.base.adapter.wrappers.ResponseUtils;
+import vn.com.dsk.demo.base.shared.wrappers.Response;
+import vn.com.dsk.demo.base.shared.wrappers.ResponseUtils;
 
 @RequiredArgsConstructor
 @RestController
