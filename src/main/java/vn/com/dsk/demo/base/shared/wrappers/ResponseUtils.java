@@ -44,7 +44,7 @@ public class ResponseUtils {
                 .secure(false)
                 .path("/")
                 .maxAge(24 * 60 * 60)
-                .sameSite("None")
+                .sameSite("Strict")
                 .build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
@@ -52,7 +52,7 @@ public class ResponseUtils {
                 .secure(false)
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60)
-                .sameSite("None")
+                .sameSite("Strict")
                 .build();
 
         return ResponseEntity.ok()

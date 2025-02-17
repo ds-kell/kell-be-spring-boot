@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfiguration implements WebMvcConfigurer {
 
-    private static final String[] WHITE_LIST_URL = {"http://localhost:3000", "http://localhost:8080", "http://localhost:8081"};
+    private static final String[] WHITE_LIST_URL = {"http://localhost:3000", "http://localhost:8080", "http://localhost:8081", "http://localhost:8088"};
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
