@@ -19,8 +19,8 @@ public class TestController {
     @GetMapping("test/get-test")
     public ResponseEntity<Response> getTest() {
         return ResponseUtils.created("BTT-19-11-2001");
-
-    }    @GetMapping("test/get-test2")
+    }
+    @GetMapping("test/get-test2")
     public ResponseEntity<Response> getTest2() {
         return ResponseUtils.created("BTT-19-11-2001");
     }
