@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.dsk.demo.base.shared.wrappers.Response;
 import vn.com.dsk.demo.base.shared.wrappers.ResponseUtils;
+import vn.com.dsk.demo.features.adapter.dto.ProductDto;
 import vn.com.dsk.demo.features.adapter.mockdata.MockDataGenerator;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,7 +23,8 @@ public class ProductController {
 
     @GetMapping("product/get-list-mock-product")
     public ResponseEntity<Response> getMockListProduct() {
-        return ResponseUtils.ok(MockDataGenerator.getMockProductList());
+        List<ProductDto> mockProductList = MockDataGenerator.getMockProductList();
+        return ResponseUtils.ok(mockProductList);
     }
 
 }
